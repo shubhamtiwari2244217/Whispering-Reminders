@@ -20,6 +20,7 @@ function App() {
     axios
       .post("http://localhost:9000/addReminder", { reminderMsg, remindAt })
       .then((res) => setReminderList(res.data));
+      window.location.reload();
   };
 
   const deleteReminder = (id) => {
