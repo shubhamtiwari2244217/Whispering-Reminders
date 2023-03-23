@@ -8,20 +8,24 @@ function App() {
  const [reminderMsg, setReminderMsg] = useState("")
  const [remindAt, setRemindAt] = useState()
  const[reminderList,setReminderList] = useState([])
+ 
  useEffect(()=>{
   axios.get("http://localhost:9000/getAllReminder").then(res => setReminderList(res.data))
 
  },[])
 
  const addReminder = () =>{
-  axios.post("http://localhost:9000/addReminder",{reminderMsg, remindAt}).then(res => setReminderList(res.data))
+  axios.post("http://localhost:9000/addReminder",{ reminderMsg, remindAt }).then(res => setReminderList(res.data))
   }
+
+ const deleteReminder=(id)=>{
+  axios.post("http://localhost:9000/deleteReminder",{ id }).then(res=>setReminderList(res.data))
+
+ }
 
  
 
- const deleteReminder=()=>{
-
- }
+ 
 
    return (
     <div className="App">
@@ -47,17 +51,29 @@ function App() {
         </div>
 
         <div className="homepage_body">
-          <div className="reminder_card">
-            <h2>Reminder Note</h2>
-            <h3>Remind me at:</h3>
-            <p>19/03/2023 @7AM</p>
-            <div className="button" onClick={deleteReminder}>Delete</div> 
-          </div>
+          {
+            reminderList.map(reminder=>(
+              <div className="reminder_card" key={reminder._id}>
+                <h2>{reminder.reminderMsg}</h2>
+                <h3>Remind me at:</h3>
+                {/* <p>{String(new Date(reminder.remindAt.toLocaleString(undefined,{timezone:"Asia/Kolkata"})))}</p> */}
+
+                <p>{reminder.remindAt && new Date(reminder.remindAt).toLocaleString(undefined, {timezone: "Asia/Kolkata"})}</p>
+
+
+
+                <div className="button" onClick={()=>deleteReminder(reminder._id)}>Delete</div> 
+             </div>
+
+            ))
+          }
+          </div>  
+          
 
          
 
 
-        </div>
+        
         
       </div>
     </div>
